@@ -13,7 +13,7 @@ class PostModelTest extends TestCase
 
 
     public function test_post_can_be_create() {
-        $user = Post::factory()->create([
+        Post::factory()->create([
             'title' => 'test',
             'content' => 'content test',
         ]);
