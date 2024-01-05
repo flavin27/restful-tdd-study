@@ -27,7 +27,8 @@ class PostRepository implements PostRepositoryInterface
 
     public function update(array $data, $id)
     {
-        // TODO: Implement update() method.
+        $this->model->findOrFail($id)->update($data);
+        return $this->model->findOrFail($id);
     }
 
     public function delete($id)
@@ -37,6 +38,6 @@ class PostRepository implements PostRepositoryInterface
 
     public function show($id): ?Post
     {
-        return $this->model->find($id);
+        return $this->model->findOrFail($id);
     }
 }

@@ -66,4 +66,24 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
+
+    public function test_post_should_be_updated() {
+        $post = Post::factory()->create();
+
+        $payload = [
+            'title' => 'test updated',
+            'content' => 'content test updated',
+        ];
+
+        $response = $this->putJson('/api/posts/' . $post->id, $payload);
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'post' => [
+                'title' => 'test updated',
+                'content' => 'content test updated',
+            ]
+        ]);
+    }
 }
