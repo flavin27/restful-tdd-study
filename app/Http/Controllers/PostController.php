@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Exceptions\PostNotFoundException;
 use App\Http\Requests\CreatePostRequest;
 use App\Repositories\PostRepository;
 use Illuminate\Http\JsonResponse;
@@ -30,8 +30,14 @@ class PostController extends Controller
         ], 201);
     }
 
+    /**
+     * @throws PostNotFoundException
+     */
     public function show($id): JsonResponse {
         $post = $this->repository->show($id);
+        if (!$post) {
+            throw new PostNotFoundException();
+        }
         return response()->json([
             'post' => $post
         ]);

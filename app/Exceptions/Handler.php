@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +29,27 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param Request $request
+     * @param Throwable $e
+     * @return JsonResponse|Response
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e): Response|JsonResponse
+    {
+        if ($e instanceof PostNotFoundException) {
+            return response()->json([
+                'error' => [
+                    'code' => 404,
+                    'message' => 'Post not found'
+                ]
+            ], 404);
+        }
+
+        return parent::render($request, $e);
     }
 }

@@ -38,6 +38,6 @@ class PostRepository implements PostRepositoryInterface
 
     public function show($id): ?Post
     {
-        return $this->model->findOrFail($id);
+        return $this->model->find($id);
     }
 }

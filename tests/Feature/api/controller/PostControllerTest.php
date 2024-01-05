@@ -66,7 +66,6 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
-
     public function test_post_should_be_updated() {
         $post = Post::factory()->create();
 
@@ -86,4 +85,18 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
+
+    public function test_post_should_return_404_if_not_found() {
+        $response = $this->getJson('/api/posts/1');
+
+        $response->assertStatus(404);
+
+        $response->assertJson([
+            'error' => [
+                'code' => 404,
+                'message' => 'Post not found'
+            ]
+        ]);
+    }
 }
+
