@@ -32,7 +32,7 @@ class PostModelTest extends TestCase
         $this->assertDatabaseCount('posts', 10);
     }
 
-    public function teste_can_update_post() {
+    public function test_can_update_post() {
         $post = Post::factory()->create([
             'title' => 'test',
             'content' => 'content test',
@@ -49,5 +49,16 @@ class PostModelTest extends TestCase
             'title' => 'test updated',
             'content' => 'content test updated',
         ]);
+    }
+
+    public function test_can_delete_post() {
+        $post = Post::factory()->create([
+            'title' => 'test',
+            'content' => 'content test',
+        ]);
+
+        $post->delete();
+
+        $this->assertDatabaseCount('posts', 0);
     }
 }

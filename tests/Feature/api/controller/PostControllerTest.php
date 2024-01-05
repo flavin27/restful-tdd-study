@@ -4,7 +4,6 @@ namespace Tests\Feature\api\controller;
 
 use App\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PostControllerTest extends TestCase
@@ -85,9 +84,33 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
-
     public function test_post_should_return_404_if_not_found() {
         $response = $this->getJson('/api/posts/1');
+
+        $response->assertStatus(404);
+
+        $response->assertJson([
+            'error' => [
+                'code' => 404,
+                'message' => 'Post not found'
+            ]
+        ]);
+    }
+
+    public function test_post_should_be_deleted() {
+        $post = Post::factory()->create();
+
+        $response = $this->deleteJson('/api/posts/' . $post->id);
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'message' => 'Post deleted successfully'
+        ]);
+    }
+
+    public function test_post_should_return_404_if_not_found_when_deleting() {
+        $response = $this->deleteJson('/api/posts/1');
 
         $response->assertStatus(404);
 

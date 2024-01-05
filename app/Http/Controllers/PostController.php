@@ -52,4 +52,19 @@ class PostController extends Controller
             'post' => $post
         ]);
     }
+
+    /**
+     * @throws PostNotFoundException
+     */
+    public function destroy($id): JsonResponse {
+        $response = $this->repository->delete($id);
+
+        if (!$response) {
+            throw new PostNotFoundException();
+        }
+
+        return response()->json([
+            'message' => 'Post deleted successfully'
+        ]);
+    }
 }

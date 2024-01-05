@@ -33,7 +33,11 @@ class PostRepository implements PostRepositoryInterface
 
     public function delete($id)
     {
-        // TODO: Implement delete() method.
+        if (!$this->model->find($id)) {
+            return null;
+        }
+        return $this->model->find($id)->delete();
+
     }
 
     public function show($id): ?Post
