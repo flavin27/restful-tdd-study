@@ -33,7 +33,6 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
-
     public function test_post_should_be_created() {
         $payload = [
             'title' => 'test',
@@ -84,6 +83,58 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
+    public function test_post_can_update_only_title() {
+        $post = Post::factory()->create();
+
+        $payload = [
+            'title' => 'test updated',
+        ];
+
+        $response = $this->putJson('/api/posts/' . $post->id, $payload);
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'post' => [
+                'title' => 'test updated',
+                'content' => $post->content,
+            ]
+        ]);
+    }
+    public function test_post_can_update_only_content() {
+        $post = Post::factory()->create();
+
+        $payload = [
+            'content' => 'content test updated',
+        ];
+
+        $response = $this->putJson('/api/posts/' . $post->id, $payload);
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'post' => [
+                'title' => $post->title,
+                'content' => 'content test updated',
+            ]
+        ]);
+    }
+    public function test_post_should_return_404_if_not_found_when_updating() {
+        $payload = [
+            'title' => 'test updated',
+            'content' => 'content test updated',
+        ];
+        $response = $this->putJson('/api/posts/1', $payload);
+
+        $response->assertStatus(404);
+
+        $response->assertJson([
+            'error' => [
+                'code' => 404,
+                'message' => 'Post not found'
+            ]
+        ]);
+    }
     public function test_post_should_return_404_if_not_found() {
         $response = $this->getJson('/api/posts/1');
 
@@ -96,7 +147,6 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
-
     public function test_post_should_be_deleted() {
         $post = Post::factory()->create();
 
@@ -108,7 +158,6 @@ class PostControllerTest extends TestCase
             'message' => 'Post deleted successfully'
         ]);
     }
-
     public function test_post_should_return_404_if_not_found_when_deleting() {
         $response = $this->deleteJson('/api/posts/1');
 

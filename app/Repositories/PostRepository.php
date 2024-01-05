@@ -25,13 +25,16 @@ class PostRepository implements PostRepositoryInterface
         return $this->model->create($data);
     }
 
-    public function update(array $data, $id)
+    public function update(array $data, $id): ?bool
     {
-        $this->model->findOrFail($id)->update($data);
-        return $this->model->findOrFail($id);
+        if (!$this->model->find($id)) {
+            return null;
+        }
+
+        return $this->model->find($id)->update($data);
     }
 
-    public function delete($id)
+    public function delete($id): ?bool
     {
         if (!$this->model->find($id)) {
             return null;

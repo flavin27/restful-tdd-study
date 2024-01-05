@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\PostNotFoundException;
 use App\Http\Requests\CreatePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Repositories\PostRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -33,7 +33,7 @@ class PostController extends Controller
     /**
      * @throws PostNotFoundException
      */
-    public function show($id): JsonResponse {
+    public function show(string $id): JsonResponse {
         $post = $this->repository->show($id);
         if (!$post) {
             throw new PostNotFoundException();
@@ -43,10 +43,17 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id): JsonResponse {
-        $data = $request->only('title', 'content');
+    /**
+     * @throws PostNotFoundException
+     */
+    public function update(UpdatePostRequest $request, string $id): JsonResponse {
+        $data = $request->validated();
 
         $post = $this->repository->update($data, $id);
+
+        if (!$post) {
+            throw new PostNotFoundException();
+        }
 
         return response()->json([
             'post' => $post
@@ -56,7 +63,7 @@ class PostController extends Controller
     /**
      * @throws PostNotFoundException
      */
-    public function destroy($id): JsonResponse {
+    public function destroy(string $id): JsonResponse {
         $response = $this->repository->delete($id);
 
         if (!$response) {
