@@ -56,7 +56,7 @@ class PostController extends Controller
         }
 
         return response()->json([
-            'post' => $post
+            'post' => $this->repository->show($id)
         ]);
     }
 

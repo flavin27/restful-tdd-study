@@ -33,6 +33,16 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
+
+    public function test_get_index_should_return_empty_array() {
+        $response = $this->getJson('/api/posts');
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'posts' => []
+        ]);
+    }
     public function test_post_should_be_created() {
         $payload = [
             'title' => 'test',
