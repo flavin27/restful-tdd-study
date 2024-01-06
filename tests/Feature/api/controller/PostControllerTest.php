@@ -33,7 +33,6 @@ class PostControllerTest extends TestCase
             ]
         ]);
     }
-
     public function test_get_index_should_return_empty_array() {
         $response = $this->getJson('/api/posts');
 
@@ -57,6 +56,40 @@ class PostControllerTest extends TestCase
             'post' => [
                 'title' => 'test',
                 'content' => 'content test',
+            ]
+        ]);
+    }
+    public function test_post_should_not_be_created_if_title_is_missing() {
+        $payload = [
+            'content' => 'content test',
+        ];
+
+        $response = $this->postJson('/api/posts', $payload);
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'errors' => [
+                'title' => [
+                    'The title field is required.'
+                ]
+            ]
+        ]);
+    }
+    public function test_post_should_not_be_created_if_content_is_missing() {
+        $payload = [
+            'title' => 'test',
+        ];
+
+        $response = $this->postJson('/api/posts', $payload);
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'errors' => [
+                'content' => [
+                    'The content field is required.'
+                ]
             ]
         ]);
     }
